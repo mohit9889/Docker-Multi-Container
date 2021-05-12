@@ -1,0 +1,25 @@
+sudo: required
+language: node_js
+node_js:
+  - 15
+services:
+  - docker
+
+before_install:
+  - docker build -t mohit9889/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true mohit9889/react-test npm test -- --coverage 
+
+after_success:
+  - docker build -t mohit9889/multi-client ./client
+  - docker build -t mohit9889/multi-nginx ./nginx
+  - docker build -t mohit9889/multi-server ./server
+
+  # log in to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  # make the image and push them to docker hub
+  - docker push mohit9889/multi-client
+  - docker push mohit9889/multi-nginx
+  - docker push mohit9889/multi-server
