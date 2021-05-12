@@ -9,7 +9,7 @@ before_install:
   - docker build -t mohit9889/react-test -f ./client/Dockerfile.dev ./client
 
 script:
-  - docker run -e CI=true mohit9889/react-test npm test -- --coverage 
+  - docker run -e CI=true mohit9889/react-test npm test -- --coverage
 
 after_success:
   - docker build -t mohit9889/multi-client ./client
@@ -23,3 +23,10 @@ after_success:
   - docker push mohit9889/multi-client
   - docker push mohit9889/multi-nginx
   - docker push mohit9889/multi-server
+
+deploy:
+  provider: heroku
+  app: "docker-multi-container-react"
+  api-key: $HEROKU_API_KEY
+  on:
+    branch: master
