@@ -21,7 +21,7 @@ script:
 deploy:
   provider: script
   script:
-    # push to dockerhub & heroku
+    # push to docker hub & heroku
     docker push $DOCKER_USERNAME/docker_client;
     docker push registry.heroku.com/$HEROKU_APP_CLIENT/web;
     heroku container:release web --app $HEROKU_APP_CLIENT;
